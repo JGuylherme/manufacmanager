@@ -10,14 +10,9 @@ import TablePagination from "../../components/TablePagination";
 
 import CreateClienteModal from "./CreateClienteModal";
 import EditClienteModal from "./EditClienteModal";
+import ViewClienteModal from "./ViewClienteModal";
 
-interface Cliente {
-  id: number;
-  nome: string;
-  email: string;
-  telefone: string;
-  endereco: string;
-}
+import { Cliente } from "../types/clientes.types";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -31,6 +26,7 @@ export default function ClientesPage() {
 
   const [clienteEditando, setClienteEditando] = useState<Cliente | null>(null);
   const [clienteCriando, setClienteCriando] = useState(false);
+  const [clienteVisualizando, setClienteVisualizando] = useState<Cliente | null>(null);
 
   useEffect(() => {
     async function fetchClientes() {
@@ -102,6 +98,12 @@ export default function ClientesPage() {
       header: "Ações",
       render: (c: Cliente) => (
         <div className="flex gap-2">
+          <button
+            onClick={() => setClienteVisualizando(c)}
+            className="px-3 py-1 rounded bg-blue-100 text-gray-800 hover:bg-blue-200"
+          >
+            Dados
+          </button>
           <button
             onClick={() => setClienteEditando(c)}
             className="px-3 py-1 rounded bg-yellow-100 text-gray-800 hover:bg-yellow-200"
@@ -187,6 +189,7 @@ export default function ClientesPage() {
           />
         </div>
 
+        {/* Modals */}
         <CreateClienteModal
           open={clienteCriando}
           onClose={() => setClienteCriando(false)}
@@ -197,6 +200,11 @@ export default function ClientesPage() {
           cliente={clienteEditando}
           onClose={() => setClienteEditando(null)}
           onUpdated={handleClienteAtualizado}
+        />
+
+        <ViewClienteModal
+          cliente={clienteVisualizando}
+          onClose={() => setClienteVisualizando(null)}
         />
       </div>
     </ProtectedRoute>
