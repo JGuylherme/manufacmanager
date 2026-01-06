@@ -8,6 +8,8 @@ import { Cliente } from "../types/clientes.types";
 
 import { UFS } from "../types/ufs.types";
 
+import { showSuccess, showError } from "../../utils/toasts";
+
 interface CreateClienteModalProps {
   open: boolean;
   onClose: () => void;
@@ -41,7 +43,10 @@ export default function CreateClienteModal({
     (tipo === "PF" ? cpf.trim() : cnpj.trim());
 
   async function criar() {
-    if (!isValid) return;
+    if (!isValid) {
+      showError("Preencha todos os campos obrigatórios");
+      return;
+    }
 
     setLoading(true);
     try {
@@ -60,9 +65,12 @@ export default function CreateClienteModal({
       };
 
       const res = await api.post<Cliente>("/clientes", payload);
+
       onCreated(res.data);
+      showSuccess("Cliente cadastrado com sucesso");
       onClose();
 
+      // reset
       setNome("");
       setEmail("");
       setTelefone("");
@@ -74,6 +82,8 @@ export default function CreateClienteModal({
       setCnpj("");
       setObservacoes("");
       setAtivo(true);
+    } catch {
+      showError("Erro ao cadastrar cliente");
     } finally {
       setLoading(false);
     }

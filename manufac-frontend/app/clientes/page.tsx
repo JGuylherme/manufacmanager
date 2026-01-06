@@ -14,6 +14,8 @@ import ViewClienteModal from "./ViewClienteModal";
 
 import { Cliente } from "../types/clientes.types";
 
+import { showSuccess, showError } from "../../utils/toasts";
+
 const ITEMS_PER_PAGE = 10;
 
 export default function ClientesPage() {
@@ -69,14 +71,32 @@ export default function ClientesPage() {
   };
 
   const excluirCliente = async (id: number) => {
-    await api.delete(`/clientes/${id}`);
-    setClientes(prev => prev.filter(c => c.id !== id));
+    const ok = confirm("Tem certeza que deseja excluir este cliente?");
+    if (!ok) return;
+
+    try {
+      await api.delete(`/clientes/${id}`);
+      setClientes(prev => prev.filter(c => c.id !== id));
+      showSuccess("Cliente excluído com sucesso");
+    } catch {
+      showError("Erro ao excluir cliente");
+    }
   };
 
   const excluirSelecionados = async () => {
-    await Promise.all(selected.map(id => api.delete(`/clientes/${id}`)));
-    setClientes(prev => prev.filter(c => !selected.includes(c.id)));
-    setSelected([]);
+    const ok = confirm(
+      `Deseja excluir ${selected.length} clientes selecionados?`
+    );
+    if (!ok) return;
+
+    try {
+      await Promise.all(selected.map(id => api.delete(`/clientes/${id}`)));
+      setClientes(prev => prev.filter(c => !selected.includes(c.id)));
+      setSelected([]);
+      showSuccess("Clientes excluídos com sucesso");
+    } catch {
+      showError("Erro ao excluir clientes");
+    }
   };
 
   const handleClienteAtualizado = (clienteAtualizado: Cliente) => {

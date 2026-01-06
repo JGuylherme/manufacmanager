@@ -8,6 +8,8 @@ import { Cliente } from "../types/clientes.types";
 
 import { UFS } from "../types/ufs.types";
 
+import { showSuccess, showError } from "../../utils/toasts";
+
 interface EditClienteModalProps {
   cliente: Cliente | null;
   onClose: () => void;
@@ -59,7 +61,10 @@ export default function EditClienteModal({
     (tipo === "PF" ? cpf.trim() : cnpj.trim());
 
   async function salvar() {
-    if (!cliente || !isValid) return;
+    if (!cliente || !isValid) {
+      showError("Preencha os campos obrigatórios");
+      return;
+    }
 
     setLoading(true);
     try {
@@ -79,7 +84,10 @@ export default function EditClienteModal({
 
       await api.put(`/clientes/${cliente.id}`, payload);
       onUpdated({ ...cliente, ...payload });
+      showSuccess("Cliente atualizado com sucesso");
       onClose();
+    } catch {
+      showError("Erro ao atualizar cliente");
     } finally {
       setLoading(false);
     }
