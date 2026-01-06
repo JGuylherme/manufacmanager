@@ -70,7 +70,6 @@ export default function CreateClienteModal({
       showSuccess("Cliente cadastrado com sucesso");
       onClose();
 
-      // reset
       setNome("");
       setEmail("");
       setTelefone("");

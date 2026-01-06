@@ -110,10 +110,30 @@ export default function ClientesPage() {
   };
 
   const columns = [
-    { header: "Nome", render: (c: Cliente) => <strong>{c.nome}</strong> },
-    { header: "Email", render: (c: Cliente) => c.email },
-    { header: "Telefone", render: (c: Cliente) => c.telefone },
-    { header: "Endereço", render: (c: Cliente) => c.endereco },
+    {
+      header: "Nome",
+      render: (c: Cliente) => <strong>{c.nome}</strong>,
+    },
+    {
+      header: "Email",
+      render: (c: Cliente) => (
+        <span className="max-w-[220px] truncate block">
+          {c.email}
+        </span>
+      ),
+    },
+    {
+      header: "Telefone",
+      render: (c: Cliente) => c.telefone,
+    },
+    {
+      header: "Endereço",
+      render: (c: Cliente) => (
+        <span className="max-w-[260px] truncate block">
+          {c.endereco}
+        </span>
+      ),
+    },
     {
       header: "Ações",
       render: (c: Cliente) => (
@@ -185,16 +205,18 @@ export default function ClientesPage() {
             </div>
           </div>
 
-          <Table<Cliente>
-            data={clientesPaginados}
-            columns={columns}
-            loading={loading}
-            rowKey={(c) => c.id}
-            selectable
-            selectedIds={selected}
-            onToggleSelectAll={toggleSelectAll}
-            onToggleSelectOne={toggleSelectOne}
-          />
+          <div className="w-full overflow-x-auto">
+            <Table<Cliente>
+              data={clientesPaginados}
+              columns={columns}
+              loading={loading}
+              rowKey={(c) => c.id}
+              selectable
+              selectedIds={selected}
+              onToggleSelectAll={toggleSelectAll}
+              onToggleSelectOne={toggleSelectOne}
+            />
+          </div>
 
           <TablePagination
             page={page}
