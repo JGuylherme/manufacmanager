@@ -112,14 +112,11 @@ export default function ClientesPage() {
   const columns = [
     {
       header: "Nome",
-      render: (c: Cliente) => <strong>{c.nome}</strong>,
-    },
-    {
-      header: "Email",
       render: (c: Cliente) => (
-        <span className="max-w-[220px] truncate block">
-          {c.email}
-        </span>
+        <div>
+          <strong className="block">{c.nome}</strong>
+          <span className="text-xs text-gray-500">{c.email}</span>
+        </div>
       ),
     },
     {
@@ -231,7 +228,6 @@ export default function ClientesPage() {
           />
         </div>
 
-        {/* Modals */}
         <CreateClienteModal
           open={clienteCriando}
           onClose={() => setClienteCriando(false)}

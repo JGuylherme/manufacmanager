@@ -117,7 +117,6 @@ export default function EditClienteModal({
       }
     >
       <div className="space-y-3">
-        {/* Nome */}
         <div>
           <label className="block text-sm font-medium mb-1">Nome</label>
           <input
@@ -127,7 +126,6 @@ export default function EditClienteModal({
           />
         </div>
 
-        {/* Email / Telefone */}
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className="block text-sm font-medium mb-1">Email</label>
@@ -147,7 +145,6 @@ export default function EditClienteModal({
           </div>
         </div>
 
-        {/* Tipo */}
         <div>
           <label className="block text-sm font-medium mb-1">Tipo</label>
           <select
@@ -160,7 +157,6 @@ export default function EditClienteModal({
           </select>
         </div>
 
-        {/* CPF / CNPJ */}
         {tipo === "PF" && (
           <div>
             <label className="block text-sm font-medium mb-1">CPF</label>
@@ -182,7 +178,6 @@ export default function EditClienteModal({
           </div>
         )}
 
-        {/* Endereço */}
         <div>
           <label className="block text-sm font-medium mb-1">Endereço</label>
           <input
@@ -192,7 +187,6 @@ export default function EditClienteModal({
           />
         </div>
 
-        {/* Cidade / Estado */}
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className="block text-sm font-medium mb-1">Cidade</label>
@@ -217,7 +211,6 @@ export default function EditClienteModal({
           </div>
         </div>
 
-        {/* Observações */}
         <div>
           <label className="block text-sm font-medium mb-1">Observações</label>
           <textarea
@@ -228,7 +221,6 @@ export default function EditClienteModal({
           />
         </div>
 
-        {/* Ativo */}
         <label className="flex items-center gap-2 text-sm">
           <input
             type="checkbox"

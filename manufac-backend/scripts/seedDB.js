@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({ path: '../.env' });
 const { faker } = require('@faker-js/faker');
 const pool = require('../config/db');
 
@@ -70,12 +70,64 @@ async function seed() {
     }
 
     for (let i = 0; i < 5; i++) {
-      const nome = faker.company.name();
-      const contato = faker.phone.number();
+      const tipo = faker.helpers.arrayElement(['PF', 'PJ']);
+
+      const nome =
+        tipo === 'PF'
+          ? faker.person.fullName()
+          : faker.company.name();
+
+      const email = faker.internet.email();
+      const telefone = faker.phone.number();
+      const endereco = faker.location.streetAddress();
+      const cidade = faker.location.city();
+      const estado = faker.location.state({ abbreviated: true });
+
+      const cpf = tipo === 'PF' ? faker.string.numeric(11) : null;
+      const cnpj = tipo === 'PJ' ? faker.string.numeric(14) : null;
+
+      const contato_responsavel =
+        tipo === 'PF'
+          ? nome
+          : faker.person.fullName();
+
+      const observacoes = faker.lorem.sentence();
+      const ativo = faker.datatype.boolean();
 
       await pool.query(
-        'INSERT INTO fornecedores (nome, contato, criado_em) VALUES (?, ?, NOW())',
-        [nome, contato]
+        `
+    INSERT INTO fornecedores
+    (
+      nome,
+      email,
+      telefone,
+      tipo,
+      cpf,
+      cnpj,
+      endereco,
+      cidade,
+      estado,
+      contato_responsavel,
+      observacoes,
+      ativo,
+      criado_em
+    )
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())
+    `,
+        [
+          nome,
+          email,
+          telefone,
+          tipo,
+          cpf,
+          cnpj,
+          endereco,
+          cidade,
+          estado,
+          contato_responsavel,
+          observacoes,
+          ativo ? 1 : 0
+        ]
       );
     }
 

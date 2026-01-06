@@ -1,23 +1,23 @@
 'use client';
 
-import { Cliente } from "../types/clientes.types";
-import Modal from '../../components/Modal';
+import Modal from "../../components/Modal";
+import { Fornecedor } from "../types/fornecedores.types";
 
-interface ViewClienteModalProps {
-  cliente: Cliente | null;
+interface ViewFornecedorModalProps {
+  fornecedor: Fornecedor | null;
   onClose: () => void;
 }
 
-export default function ViewClienteModal({
-  cliente,
+export default function ViewFornecedorModal({
+  fornecedor,
   onClose,
-}: ViewClienteModalProps) {
-  if (!cliente) return null;
+}: ViewFornecedorModalProps) {
+  if (!fornecedor) return null;
 
   return (
     <Modal
-      open={!!cliente}
-      title="Detalhes do Cliente"
+      open={!!fornecedor}
+      title="Detalhes do Fornecedor"
       onClose={onClose}
       footer={
         <button
@@ -38,25 +38,25 @@ export default function ViewClienteModal({
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="text-xs text-gray-500">Nome</label>
-              <p className="text-gray-800 font-medium">{cliente.nome}</p>
+              <p className="text-gray-800 font-medium">{fornecedor.nome}</p>
             </div>
 
             <div>
               <label className="text-xs text-gray-500">Tipo</label>
-              <p className="text-gray-800">{cliente.tipo}</p>
+              <p className="text-gray-800">{fornecedor.tipo}</p>
             </div>
 
-            {cliente.tipo === 'PF' && (
+            {fornecedor.tipo === "PF" && (
               <div>
                 <label className="text-xs text-gray-500">CPF</label>
-                <p className="text-gray-800">{cliente.cpf || '-'}</p>
+                <p className="text-gray-800">{fornecedor.cpf || '-'}</p>
               </div>
             )}
 
-            {cliente.tipo === 'PJ' && (
+            {fornecedor.tipo === "PJ" && (
               <div>
                 <label className="text-xs text-gray-500">CNPJ</label>
-                <p className="text-gray-800">{cliente.cnpj || '-'}</p>
+                <p className="text-gray-800">{fornecedor.cnpj || '-'}</p>
               </div>
             )}
           </div>
@@ -70,19 +70,21 @@ export default function ViewClienteModal({
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="text-xs text-gray-500">Email</label>
-              <p className="text-gray-800">{cliente.email}</p>
+              <p className="text-gray-800">{fornecedor.email}</p>
             </div>
 
             <div>
               <label className="text-xs text-gray-500">Telefone</label>
-              <p className="text-gray-800">{cliente.telefone}</p>
+              <p className="text-gray-800">{fornecedor.telefone}</p>
             </div>
 
             <div className="col-span-2">
               <label className="text-xs text-gray-500">
                 Contato Responsável
               </label>
-              <p className="text-gray-800">{cliente.nome}</p>
+              <p className="text-gray-800">
+                {fornecedor.contato_responsavel || '-'}
+              </p>
             </div>
           </div>
         </section>
@@ -95,18 +97,18 @@ export default function ViewClienteModal({
           <div className="space-y-3">
             <div>
               <label className="text-xs text-gray-500">Endereço</label>
-              <p className="text-gray-800">{cliente.endereco}</p>
+              <p className="text-gray-800">{fornecedor.endereco}</p>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="text-xs text-gray-500">Cidade</label>
-                <p className="text-gray-800">{cliente.cidade || '-'}</p>
+                <p className="text-gray-800">{fornecedor.cidade || '-'}</p>
               </div>
 
               <div>
                 <label className="text-xs text-gray-500">Estado</label>
-                <p className="text-gray-800">{cliente.estado || '-'}</p>
+                <p className="text-gray-800">{fornecedor.estado || '-'}</p>
               </div>
             </div>
           </div>
@@ -121,19 +123,20 @@ export default function ViewClienteModal({
             <div>
               <label className="text-xs text-gray-500">Observações</label>
               <p className="text-gray-800">
-                {cliente.observacoes || '-'}
+                {fornecedor.observacoes || '-'}
               </p>
             </div>
 
             <div>
               <label className="text-xs text-gray-500">Status</label>
               <span
-                className={`inline-flex px-2 py-1 rounded-full text-xs font-medium ${cliente.ativo
+                className={`inline-flex px-2 py-1 rounded-full text-xs font-medium ${
+                  fornecedor.ativo
                     ? 'bg-green-100 text-green-700'
                     : 'bg-red-100 text-red-700'
-                  }`}
+                }`}
               >
-                {cliente.ativo ? 'Ativo' : 'Inativo'}
+                {fornecedor.ativo ? 'Ativo' : 'Inativo'}
               </span>
             </div>
           </div>

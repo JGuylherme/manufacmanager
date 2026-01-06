@@ -10,12 +10,10 @@ import TablePagination from "../../components/TablePagination";
 
 import CreateFornecedorModal from "./CreateFornecedorModal";
 import EditFornecedorModal from "./EditFornecedorModal";
+import ViewFornecedorModal from "./ViewFornecedorModal";
 
-interface Fornecedor {
-  id: number;
-  nome: string;
-  contato: string;
-}
+import { Fornecedor } from "../types/fornecedores.types";
+import { showSuccess, showError } from "../../utils/toasts";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -29,19 +27,37 @@ export default function FornecedoresPage() {
 
   const [fornecedorEditando, setFornecedorEditando] = useState<Fornecedor | null>(null);
   const [fornecedorCriando, setFornecedorCriando] = useState(false);
+  const [fornecedorVisualizando, setFornecedorVisualizando] = useState<Fornecedor | null>(null);
 
   useEffect(() => {
     async function fetchFornecedores() {
-      const res = await api.get<Fornecedor[]>("/fornecedores");
-      setFornecedores(res.data);
-      setLoading(false);
+      try {
+        const res = await api.get<Fornecedor[]>("/fornecedores");
+
+        const normalizados = res.data.map(f => ({
+          ...f,
+          cpf: f.cpf ?? undefined,
+          cnpj: f.cnpj ?? undefined,
+          cidade: f.cidade ?? undefined,
+          estado: f.estado ?? undefined,
+          observacoes: f.observacoes ?? undefined,
+        }));
+
+        setFornecedores(normalizados);
+      } catch {
+        showError("Erro ao carregar fornecedores");
+      } finally {
+        setLoading(false);
+      }
     }
+
     fetchFornecedores();
   }, []);
 
   const fornecedoresFiltrados = useMemo(() => {
     return fornecedores.filter(f =>
-      f.nome.toLowerCase().includes(search.toLowerCase())
+      f.nome.toLowerCase().includes(search.toLowerCase()) ||
+      f.email.toLowerCase().includes(search.toLowerCase())
     );
   }, [fornecedores, search]);
 
@@ -64,20 +80,44 @@ export default function FornecedoresPage() {
     );
   };
 
+  /* =======================
+     EXCLUSÃO (COM TOASTS)
+     ======================= */
+
   const excluirFornecedor = async (id: number) => {
-    await api.delete(`/fornecedores/${id}`);
-    setFornecedores(prev => prev.filter(f => f.id !== id));
+    const ok = confirm("Tem certeza que deseja excluir este fornecedor?");
+    if (!ok) return;
+
+    try {
+      await api.delete(`/fornecedores/${id}`);
+      setFornecedores(prev => prev.filter(f => f.id !== id));
+      showSuccess("Fornecedor excluído com sucesso");
+    } catch {
+      showError("Erro ao excluir fornecedor");
+    }
   };
 
   const excluirSelecionados = async () => {
-    await Promise.all(selected.map(id => api.delete(`/fornecedores/${id}`)));
-    setFornecedores(prev => prev.filter(f => !selected.includes(f.id)));
-    setSelected([]);
+    const ok = confirm(
+      `Deseja excluir ${selected.length} fornecedores selecionados?`
+    );
+    if (!ok) return;
+
+    try {
+      await Promise.all(
+        selected.map(id => api.delete(`/fornecedores/${id}`))
+      );
+      setFornecedores(prev => prev.filter(f => !selected.includes(f.id)));
+      setSelected([]);
+      showSuccess("Fornecedores excluídos com sucesso");
+    } catch {
+      showError("Erro ao excluir fornecedores");
+    }
   };
 
   const handleFornecedorAtualizado = (fAtualizado: Fornecedor) => {
     setFornecedores(prev =>
-      prev.map(f => (f.id === fAtualizado.id ? { ...f, ...fAtualizado } : f))
+      prev.map(f => (f.id === fAtualizado.id ? fAtualizado : f))
     );
   };
 
@@ -86,18 +126,58 @@ export default function FornecedoresPage() {
   };
 
   const columns = [
-    { header: "Nome", render: (f: Fornecedor) => <strong>{f.nome}</strong> },
-    { header: "Contato", render: (f: Fornecedor) => f.contato },
+    {
+      header: "Nome",
+      render: (f: Fornecedor) => (
+        <div>
+          <strong className="block">{f.nome}</strong>
+          <span className="text-xs text-gray-500">{f.email}</span>
+        </div>
+      ),
+    },
+    {
+      header: "Tipo",
+      render: (f: Fornecedor) => (
+        <span className="text-sm">
+          {f.tipo === "PJ" ? "Pessoa Jurídica" : "Pessoa Física"}
+        </span>
+      ),
+    },
+    {
+      header: "Telefone",
+      render: (f: Fornecedor) => f.telefone,
+    },
+    {
+      header: "Status",
+      render: (f: Fornecedor) => (
+        <span
+          className={`px-2 py-1 rounded text-xs font-medium ${f.ativo
+              ? "bg-green-100 text-green-800"
+              : "bg-red-100 text-red-800"
+            }`}
+        >
+          {f.ativo ? "Ativo" : "Inativo"}
+        </span>
+      ),
+    },
     {
       header: "Ações",
       render: (f: Fornecedor) => (
         <div className="flex gap-2">
+          <button
+            onClick={() => setFornecedorVisualizando(f)}
+            className="px-3 py-1 rounded bg-blue-100 text-gray-800 hover:bg-blue-200"
+          >
+            Ver
+          </button>
+
           <button
             onClick={() => setFornecedorEditando(f)}
             className="px-3 py-1 rounded bg-yellow-100 text-gray-800 hover:bg-yellow-200"
           >
             Editar
           </button>
+
           <button
             onClick={() => excluirFornecedor(f.id)}
             className="px-3 py-1 rounded bg-red-100 text-gray-800 hover:bg-red-200"
@@ -127,7 +207,7 @@ export default function FornecedoresPage() {
                 setSearch(v);
                 setPage(1);
               }}
-              placeholder="Buscar fornecedor"
+              placeholder="Buscar por nome ou email"
             />
 
             <div className="flex items-center gap-3">
@@ -172,6 +252,11 @@ export default function FornecedoresPage() {
             }
           />
         </div>
+
+        <ViewFornecedorModal
+          fornecedor={fornecedorVisualizando}
+          onClose={() => setFornecedorVisualizando(null)}
+        />
 
         <CreateFornecedorModal
           open={fornecedorCriando}

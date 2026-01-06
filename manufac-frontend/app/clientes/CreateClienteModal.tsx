@@ -112,7 +112,6 @@ export default function CreateClienteModal({
       }
     >
       <div className="space-y-4">
-        {/* Nome */}
         <div>
           <label className="block text-sm font-medium mb-1">Nome</label>
           <input
@@ -122,7 +121,6 @@ export default function CreateClienteModal({
           />
         </div>
 
-        {/* Email / Telefone */}
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className="block text-sm font-medium mb-1">Email</label>
@@ -143,7 +141,6 @@ export default function CreateClienteModal({
           </div>
         </div>
 
-        {/* Tipo */}
         <div>
           <label className="block text-sm font-medium mb-1">Tipo</label>
           <select
@@ -156,7 +153,6 @@ export default function CreateClienteModal({
           </select>
         </div>
 
-        {/* CPF / CNPJ */}
         {tipo === "PF" && (
           <div>
             <label className="block text-sm font-medium mb-1">CPF</label>
@@ -179,7 +175,6 @@ export default function CreateClienteModal({
           </div>
         )}
 
-        {/* Endereço */}
         <div>
           <label className="block text-sm font-medium mb-1">Endereço</label>
           <input
@@ -216,7 +211,6 @@ export default function CreateClienteModal({
           </div>
         </div>
 
-        {/* Observações */}
         <div>
           <label className="block text-sm font-medium mb-1">Observações</label>
           <textarea
@@ -227,7 +221,6 @@ export default function CreateClienteModal({
           />
         </div>
 
-        {/* Ativo */}
         <label className="flex items-center gap-2 text-sm">
           <input
             type="checkbox"
