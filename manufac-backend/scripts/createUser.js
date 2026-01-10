@@ -1,5 +1,6 @@
-const pool = require('../config/db');
+require('dotenv').config({ path: '../.env' });
 const bcrypt = require('bcryptjs');
+const pool = require('../config/db');
 
 async function createUser(nome, email, senha, papel = 'admin') {
   try {
