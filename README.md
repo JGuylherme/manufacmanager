@@ -12,7 +12,6 @@ Gerenciamento completo de manufatura e estoque: sistema full-stack para controla
 - Estrutura do Banco de Dados
 - Melhorias Futuras
 - Como Executar
-- Observações
 
 ## Sobre o Projeto
 
@@ -159,9 +158,3 @@ node manufac-backend/scripts/createUser.js
 ```
 
 O script exibirá o `insertId` do usuário criado ou uma mensagem de erro em caso de falha.
-
-Observações e segurança:
-
-- Use uma senha segura ao criar contas administrativas e remova ou proteja esse script em ambientes de produção.
-- Como alternativa, você pode transformar o script para aceitar argumentos de linha de comando (ex: `process.argv`) ou variáveis de ambiente.
-- Se preferir, posso adaptar o script para ler `nome`, `email`, `senha` e `papel` via `process.argv` ou `readline` para evitar editar o arquivo a cada execução.
